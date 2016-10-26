@@ -3,13 +3,6 @@
 /* Created by: Gupta, Kabir */
 
 def call(def base){
-	/* The 'call(def base)' method is the script (ie. workflow / pipeline / job) that will run
-	   'call(def base)' must return a Map with two keys: 1) 'response' 2) 'message'
-	   The only two valid values for 'response' are: 1) 'ok' 2) 'error'
-	   The 'message' key must be a String if 'response' is 'error'
-	   The 'message' key may be any serializable object if 'response' is 'ok' 
-	   See the standards here: https://wiki/pages/viewpage.action?pageId=50965437 */
-
 	this_base = base
 	def glob_objs = base.get_glob_objs()
 	def output = [
@@ -23,6 +16,49 @@ def call(def base){
 		return input_validation
 	}
 
+	/* Read the bash file resynchonrize the NTP offset */
+	def synch_script = base.read_wf_file('sys-linux-update-ntp', 'resynch.sh')
+	if(synch_script['response'] == 'error'){
+		return synch_script
+	}
+	synch_script = synch_script['message']
+
+	/* Create change ticket */
+	def chg_desc = "Resynch NTP Offset: ${wf_address}\n"
+	def chg_ticket = base.create_chg_ticket(
+		wf_address,
+		'Resynch NTP Offset',
+		chg_desc,
+		'Network Operations Center',
+		wf_requester
+	)
+	if(chg_ticket['response'] == 'error'){
+	    output['message'] = "FAILURE:\n${wf_address} time wasn't resynchronized because a change ticket wasn't created:\n${chg_ticket['message']}\n"
+	    return output
+	}
+
+	/* Run the bash script to resynch the time */
+	def synch_script_output = base.run_powershell('Running script to re-synch the NTP offset',
+		synch_script,
+		base.get_cred_id(wf_address),
+		[
+			'_address_': wf_address
+		]
+	)
+
+	boolean success = true
+	if(synch_script_output['response'] == 'ok'){
+		chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\n"
+		output['message'] = "${wf_address} NTP offset was resynchronized."
+	else {
+		/* Update ticket/output if validation is successfull */
+		success = false
+		chg_desc = "FAILURE:\n${wf_address} time offset was not resynchronized.\n${synch_script_output['message']}\n"
+		output['response'] = 'error'
+		output['message'] = "${wf_address} NTP offset was not resynchronized. See change ticket for details."
+	}
+	base.update_chg_ticket_desc(chg_desc)
+	base.close_chg_ticket(success)
 	return output
 }
 
@@ -32,8 +68,6 @@ def input_validation() {
 		'message': ''
 	]
 
-	/* The following is an example of how to validate a job parameter named 'wf_address'
-
 	if (wf_address == '') {
 		output['message'] = 'Missing required parameter wf_address'
 		return output
@@ -42,8 +76,6 @@ def input_validation() {
 	wf_address.replaceAll("\s", '').toLowerCase()
 	this_base.set_str_param('wf_address', wf_address)
 	output['response'] = 'ok'
-
-	*/
 
 	return output
 }
