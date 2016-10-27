@@ -13,7 +13,7 @@ while read line; do
 done < "resolv.conf"
 
 sudo service ntpd stop
-sudo ntpdate -s $ip
+sudo ntpd $ip
 sudo service ntpd start 
  
 EOF

@@ -50,6 +50,7 @@ def call(def base){
 	if(synch_script_output['response'] == 'ok'){
 		chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\n"
 		output['message'] = "${wf_address} NTP offset was resynchronized."
+		output['response'] = 'ok'
 	}else {
 		/* Update ticket/output if validation is successfull */
 		success = false
