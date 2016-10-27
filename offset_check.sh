@@ -1,0 +1,13 @@
+# This script will run on a Jenkins Linux slave. Its purpose is to restart a linux machine.
+
+cat <<EOF > remote.sh
+# Set the PATH and TERM because piping a script to sshpass via STDIN does not initialize a terminal
+export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
+export TERM=xterm
+ 
+ntpq -p
+ 
+EOF
+ 
+# Execute the script on the remote Linux machine
+sshpass -p "$__password__" ssh -o StrictHostKeyChecking=no $__username__@$_address_ < remote.sh
