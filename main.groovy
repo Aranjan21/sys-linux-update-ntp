@@ -89,7 +89,7 @@ def ntp_offset(){
 	)
 
 	if(offset_check_output['response'] == 'ok'){
-		chg_desc = "The current time offset is:\n${offset_check_output['message']}"
+		chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds."
 		this_base.update_chg_ticket_desc(chg_desc)
 	}
 }
