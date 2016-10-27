@@ -5,7 +5,7 @@ cat <<EOF > remote.sh
 export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 export TERM=xterm
  
-ntpq -p
+ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } $1 ~ /\*/ { offset=$9 } END { print offset }'
  
 EOF
  
