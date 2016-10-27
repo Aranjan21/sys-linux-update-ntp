@@ -17,7 +17,7 @@ def call(def base){
 	}
 
 	/* Read the bash file resynchonrize the NTP offset */
-	def synch_script = base.read_wf_file('sys-linux-update-ntp', 'resynch.sh')
+	def synch_script = base.read_wf_file('sys-linux-update-ntp', 'resynch_time.sh')
 	if(synch_script['response'] == 'error'){
 		return synch_script
 	}
@@ -50,7 +50,7 @@ def call(def base){
 	if(synch_script_output['response'] == 'ok'){
 		chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\n"
 		output['message'] = "${wf_address} NTP offset was resynchronized."
-	else {
+	}else {
 		/* Update ticket/output if validation is successfull */
 		success = false
 		chg_desc = "FAILURE:\n${wf_address} time offset was not resynchronized.\n${synch_script_output['message']}\n"
@@ -73,7 +73,7 @@ def input_validation() {
 		return output
 	}
 
-	wf_address.replaceAll("\s", '').toLowerCase()
+	wf_address.replaceAll("\\s", '').toLowerCase()
 	this_base.set_str_param('wf_address', wf_address)
 	output['response'] = 'ok'
 
