@@ -24,7 +24,7 @@ def call(def base){
 	synch_script = synch_script['message']
 
 	/* Read the bash file that checks the time offset */
-	def offset_check = base.read_wf_file('sys-linux-update-ntp', 'offset_check.sh')
+	offset_check = base.read_wf_file('sys-linux-update-ntp', 'offset_check.sh')
 	if(offset_check['response'] == 'error'){
 		return offset_check
 	}
