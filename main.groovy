@@ -38,7 +38,7 @@ def call(def base){
 	}
 
 	/* Run the bash script to resynch the time */
-	def synch_script_output = base.run_powershell('Running script to re-synch the NTP offset',
+	def synch_script_output = base.run_shellscript('Running script to re-synch the NTP offset',
 		synch_script,
 		base.get_cred_id(wf_address),
 		[
