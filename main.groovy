@@ -23,6 +23,13 @@ def call(def base){
 	}
 	synch_script = synch_script['message']
 
+	/* Read the bash file that checks the time offset */
+	def offset_check = base.read_wf_file('sys-linux-update-ntp', 'offset_check.sh')
+	if(offset_check['response'] == 'error'){
+		return offset_check
+	}
+	offset_check = offset_check['message']
+
 	/* Create change ticket */
 	def chg_desc = "Resynch NTP Offset: ${wf_address}\n"
 	def chg_ticket = base.create_chg_ticket(
@@ -36,6 +43,9 @@ def call(def base){
 	    output['message'] = "FAILURE:\n${wf_address} time wasn't resynchronized because a change ticket wasn't created:\n${chg_ticket['message']}\n"
 	    return output
 	}
+
+	/* Update the ticket with the current NTP offset */
+	def ntp_offset_before = this.ntp_offset()
 
 	/* Run the bash script to resynch the time */
 	def synch_script_output = base.run_shellscript('Running script to re-synch the NTP offset',
@@ -58,9 +68,30 @@ def call(def base){
 		output['response'] = 'error'
 		output['message'] = "${wf_address} NTP offset was not resynchronized. See change ticket for details."
 	}
+
+	/* Update the ticket with the current NTP offset */
+	def ntp_offset_after = this.ntp_offset()
+
 	base.update_chg_ticket_desc(chg_desc)
 	base.close_chg_ticket(success)
 	return output
+}
+
+/* Run the bash script to check time offset */
+def ntp_offset(){
+
+	def offset_check_output = this_base.run_shellscript('Running script to check time offset',
+		offset_check,
+		this_base.get_cred_id(wf_address),
+		[
+			'_address_': wf_address
+		]
+	)
+
+	if(offset_check_output['response'] == 'ok'){
+		chg_desc = "The current time offset is:\n${offset_check_output['message']}"
+		this_base.update_chg_ticket_desc(chg_desc)
+	}
 }
 
 def input_validation() {
