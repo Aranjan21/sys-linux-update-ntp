@@ -73,7 +73,7 @@ def input_validation() {
 		return output
 	}
 
-	wf_address.replaceAll("\\s", '').toLowerCase()
+	wf_address = wf_address.replaceAll("\\s", '').toLowerCase()
 	this_base.set_str_param('wf_address', wf_address)
 	output['response'] = 'ok'
 
