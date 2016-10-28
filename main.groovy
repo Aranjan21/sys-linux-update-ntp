@@ -67,11 +67,17 @@ def call(def base){
 		chg_desc = "FAILURE:\n${wf_address} time offset was not resynchronized.\n${synch_script_output['message']}\n"
 		output['response'] = 'error'
 		output['message'] = "${wf_address} NTP offset was not resynchronized. See change ticket for details."
+		base.update_chg_ticket_desc(chg_desc)
+		base.close_chg_ticket(success)
+		return output
 	}
 
 	/* Update the ticket with the current NTP offset */
 	def ntp_offset_after = this.ntp_offset()
+	base.log('TESTTTTTTTTTTT',['Text': "${ntp_offset['message']}"])
+	// if("${}"){
 
+	// }
 	base.update_chg_ticket_desc(chg_desc)
 	base.close_chg_ticket(success)
 	return output
