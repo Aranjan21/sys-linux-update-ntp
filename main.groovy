@@ -74,7 +74,7 @@ def call(def base){
 
 	/* Update the ticket with the current NTP offset */
 	def ntp_offset_after = this.ntp_offset()
-	base.log('TESTTTTTTTTTTT',['Text': ntp_offset_after])
+	base.log('TESTTTTTTTTTTT',['Text': ntp_offset_after['message']])
 	// if("${}"){
 
 	// }
