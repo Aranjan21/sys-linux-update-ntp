@@ -56,28 +56,31 @@ def call(def base){
 		]
 	)
 
-	boolean success = true
+	Boolean success = true
 	if(synch_script_output['response'] == 'ok'){
-		chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\n"
-		output['message'] = "${wf_address} NTP offset was resynchronized."
 		output['response'] = 'ok'
+
+		/* Update the ticket with the current NTP offset */
+		def ntp_offset_after = this.ntp_offset()
+
+		ntp_offset_before = ntp_offset_before['message']
+		ntp_offset_after = ntp_offset_after['message']
+
+		if(ntp_offset_before == ntp_offset_after){
+			chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\nNote: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
+			output['message'] = "${wf_address} NTP offset was resynchronized but changes haven't been picked up yet."
+		}else{
+			chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\n"
+			output['message'] = "${wf_address} NTP offset was resynchronized."
+		}
 	}else {
 		/* Update ticket/output if validation is successfull */
 		success = false
 		chg_desc = "FAILURE:\n${wf_address} time offset was not resynchronized.\n${synch_script_output['message']}\n"
 		output['response'] = 'error'
 		output['message'] = "${wf_address} NTP offset was not resynchronized. See change ticket for details."
-		base.update_chg_ticket_desc(chg_desc)
-		base.close_chg_ticket(success)
-		return output
 	}
 
-	/* Update the ticket with the current NTP offset */
-	def ntp_offset_after = this.ntp_offset()
-	base.log('TESTTTTTTTTTTT',['Text': ntp_offset_after['message']])
-	// if("${}"){
-
-	// }
 	base.update_chg_ticket_desc(chg_desc)
 	base.close_chg_ticket(success)
 	return output
