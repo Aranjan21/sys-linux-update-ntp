@@ -60,6 +60,9 @@ def call(def base){
 	if(synch_script_output['response'] == 'ok'){
 		output['response'] = 'ok'
 
+		chg_desc = "SUCCESS: ${wf_address} time offset was resynchronized.\n"
+		base.update_chg_ticket_desc(chg_desc)
+
 		/* Update the ticket with the current NTP offset */
 		def ntp_offset_after = this.ntp_offset()
 
@@ -67,11 +70,8 @@ def call(def base){
 		ntp_offset_after = ntp_offset_after['message']
 
 		if(ntp_offset_before == ntp_offset_after){
-			chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\nNote: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
+			chg_desc = "NOTE: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
 			output['message'] = "${wf_address} NTP offset was resynchronized but changes haven't been picked up yet."
-		}else{
-			chg_desc = "SUCCESS:\n${wf_address} time offset was resynchronized.\n"
-			output['message'] = "${wf_address} NTP offset was resynchronized."
 		}
 	}else {
 		/* Update ticket/output if validation is successfull */
@@ -98,7 +98,7 @@ def ntp_offset(){
 	)
 
 	if(offset_check_output['response'] == 'ok'){
-		chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds."
+		chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds.\n"
 		this_base.update_chg_ticket_desc(chg_desc)
 		return offset_check_output
 	}
