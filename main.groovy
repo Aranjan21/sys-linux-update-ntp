@@ -40,7 +40,7 @@ def call(def base){
 		wf_requester
 	)
 	if(chg_ticket['response'] == 'error'){
-	    output['message'] = "FAILURE:\n${wf_address} time wasn't resynchronized because a change ticket wasn't created:\n${chg_ticket['message']}\n"
+	    output['message'] = "FAILURE: ${wf_address} time wasn't resynchronized because a change ticket wasn't created: ${chg_ticket['message']}"
 	    return output
 	}
 
@@ -78,7 +78,7 @@ def call(def base){
 		success = false
 		chg_desc = "FAILURE:\n${wf_address} time offset was not resynchronized.\n${synch_script_output['message']}\n"
 		output['response'] = 'error'
-		output['message'] = "${wf_address} NTP offset was not resynchronized. See change ticket for details."
+		output['message'] = "${wf_address} NTP offset was not resynchronized ${synch_script_output['message']}."
 	}
 
 	base.update_chg_ticket_desc(chg_desc)

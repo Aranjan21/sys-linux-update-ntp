@@ -1,4 +1,4 @@
-# This script will run on a Jenkins Linux slave. Its purpose is to restart a linux machine.
+# This script will run on a Jenkins Linux slave and returns the NTP offset.
 
 cat <<EOF > remote.sh
 # Set the PATH and TERM because piping a script to sshpass via STDIN does not initialize a terminal
