@@ -1,9 +1,8 @@
 # **sys-linux-update-ntp**
 #####Created by: Gupta, Kabir KabirG@cvent.com  
 <br>
-*Job Description*<br>
+**Job Description**<br>
 This job will create a CR and resynchronize the NTP offset of a linux machine given an FQDN, hostname or IP address.<br>
-<br>
 <br>
 **Example CLI Command:**
 <br>
