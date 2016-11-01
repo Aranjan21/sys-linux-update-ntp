@@ -2,7 +2,7 @@
 
 /* Created by: Gupta, Kabir */
 
-def call(def base){
+def call(def base) {
 	this_base = base
 	def glob_objs = base.get_glob_objs()
 	def output = [
@@ -39,7 +39,7 @@ def call(def base){
 		'Network Operations Center',
 		wf_requester
 	)
-	if(chg_ticket['response'] == 'error'){
+	if (chg_ticket['response'] == 'error') {
 	    output['message'] = "FAILURE: ${wf_address} time wasn't resynchronized because a change ticket wasn't created: ${chg_ticket['message']}"
 	    return output
 	}
@@ -57,7 +57,7 @@ def call(def base){
 	)
 
 	Boolean success = true
-	if(synch_script_output['response'] == 'ok'){
+	if (synch_script_output['response'] == 'ok') {
 		output['response'] = 'ok'
 
 		chg_desc = "SUCCESS: ${wf_address} time offset was resynchronized.\n"
@@ -69,11 +69,11 @@ def call(def base){
 		ntp_offset_before = ntp_offset_before['message']
 		ntp_offset_after = ntp_offset_after['message']
 
-		if(ntp_offset_before == ntp_offset_after){
+		if (ntp_offset_before == ntp_offset_after) {
 			chg_desc = "NOTE: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
 			output['message'] = "${wf_address} NTP offset was resynchronized but changes haven't been picked up yet."
 		}
-	}else {
+	} else {
 		/* Update ticket/output if validation is successfull */
 		success = false
 		chg_desc = "FAILURE:\n${wf_address} time offset was not resynchronized.\n${synch_script_output['message']}\n"
@@ -87,7 +87,7 @@ def call(def base){
 }
 
 /* Run the bash script to check time offset */
-def ntp_offset(){
+def ntp_offset() {
 
 	def offset_check_output = this_base.run_shellscript('Running script to check time offset',
 		offset_check,
@@ -97,7 +97,7 @@ def ntp_offset(){
 		]
 	)
 
-	if(offset_check_output['response'] == 'ok'){
+	if (offset_check_output['response'] == 'ok') {
 		chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds.\n"
 		this_base.update_chg_ticket_desc(chg_desc)
 		return offset_check_output
@@ -115,7 +115,7 @@ def input_validation() {
 		return output
 	}
 
-	wf_address = wf_address.replaceAll("\\s", '').toLowerCase()
+	wf_address = wf_address.replaceAll('\\s', '').toLowerCase()
 	this_base.set_str_param('wf_address', wf_address)
 	output['response'] = 'ok'
 
