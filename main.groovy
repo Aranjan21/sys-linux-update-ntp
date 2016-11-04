@@ -101,13 +101,11 @@ def ntp_offset() {
         chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds.\n"
         this_base.update_chg_ticket_desc(chg_desc)
         return offset_check_output
-    } 
-
-    // else {
-    //     chg_desc = "Unable to retrieve time offset: ${offset_check_output['message']}.\n"
-    //     this_base.update_chg_ticket_desc(chg_desc)
-    //     return offset_check_output
-    // }
+    } else {
+        chg_desc = "Unable to retrieve time offset: ${offset_check_output['message']}.\n"
+        this_base.update_chg_ticket_desc(chg_desc)
+        return offset_check_output
+    }
 }
 
 def input_validation() {
