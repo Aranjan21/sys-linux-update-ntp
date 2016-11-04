@@ -84,7 +84,7 @@ def call(def base) {
             chg_desc = "NOTE: Resync was successful but couldn't be validated. Please validate manually.\n"
             output['message'] = "${wf_address} NTP offset was resynchronized but couldn't be validated. Please validate manually."
         }
-        
+
     } else {
         /* Update ticket/output if validation is successfull */
         success = false
@@ -109,18 +109,13 @@ def ntp_offset() {
         ]
     )
 
-    offset_check_output['response'] = 'error'
-    offset_check_output['message'] = 'NTP OFFSET CHECK WAS UNSUCCESSFUL TEST.'
-
     if (offset_check_output['response'] == 'ok') {
         chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds.\n"
-        this_base.update_chg_ticket_desc(chg_desc)
-        return offset_check_output
     } else {
         chg_desc = "Unable to retrieve time offset: ${offset_check_output['message']}.\n"
-        this_base.update_chg_ticket_desc(chg_desc)
-        return offset_check_output
     }
+    this_base.update_chg_ticket_desc(chg_desc)
+    return offset_check_output
 }
 
 def input_validation() {
