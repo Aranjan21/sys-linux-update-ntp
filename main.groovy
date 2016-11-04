@@ -36,7 +36,7 @@ def call(def base) {
         wf_address,
         'Resynch NTP Offset',
         chg_desc,
-        'Network Operations Center',
+        '',
         wf_requester
     )
     if (chg_ticket['response'] == 'error') {
