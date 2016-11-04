@@ -80,6 +80,9 @@ def call(def base) {
                 chg_desc = "NOTE: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
                 output['message'] = "${wf_address} NTP offset was resynchronized but changes haven't been picked up yet."
             }
+        } else {
+            chg_desc = "NOTE: Resync was successful but couldn't be validated. Please validate manually.\n"
+            output['message'] = "${wf_address} NTP offset was resynchronized but couldn't be validated. Please validate manually."
         }
         
     } else {
