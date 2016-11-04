@@ -6,4 +6,4 @@ This job will create a CR and resynchronize the NTP offset of a linux machine gi
 <br>
 **Example CLI Command:**
 <br>
-`knife jenkins create sys-linux-update-ntp --params '{"wf_address":"bh20-cps003-510"}' --instance cloudops-jenkins`  
+`knife jenkins create sys-linux-update-ntp --instance cloudops-jenkins --params '{"wf_address":"bh20-cps003-510"}'`  

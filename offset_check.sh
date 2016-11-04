@@ -6,7 +6,6 @@ export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 export TERM=xterm
  
 ntp_offset=\`ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } \$1 ~ /\*/ { offset=\$9 } END { print offset }'\`
-echo \$ntp_offset
 
 EOF
  
