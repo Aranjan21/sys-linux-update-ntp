@@ -106,8 +106,8 @@ def ntp_offset() {
         ]
     )
 
-    // offset_check_output['response'] = 'error'
-    // offset_check_output['message'] = 'NTP OFFSET CHECK WAS UNSUCCESSFUL TEST.'
+    offset_check_output['response'] = 'error'
+    offset_check_output['message'] = 'NTP OFFSET CHECK WAS UNSUCCESSFUL TEST.'
 
     if (offset_check_output['response'] == 'ok') {
         chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds.\n"
