@@ -45,7 +45,8 @@ def call(def base) {
     }
 
     /* Update the ticket with the current NTP offset */
-    def ntp_offset_before = this.ntp_offset()
+    def ntp_offset_before = [:]
+    ntp_offset_before = this.ntp_offset()
 
     /* Run the bash script to resynch the time */
     def synch_script_output = base.run_shellscript('Running script to re-synch the NTP offset',
@@ -64,15 +65,23 @@ def call(def base) {
         base.update_chg_ticket_desc(chg_desc)
 
         /* Update the ticket with the current NTP offset */
-        def ntp_offset_after = this.ntp_offset()
+        def ntp_offset_after = [:]
+        ntp_offset_after = this.ntp_offset()
 
-        ntp_offset_before = ntp_offset_before['message']
-        ntp_offset_after = ntp_offset_after['message']
+        ntp_before_status = ntp_offset_before['response']
+        ntp_after_status = ntp_offset_after['response']
 
-        if (ntp_offset_before == ntp_offset_after) {
-            chg_desc = "NOTE: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
-            output['message'] = "${wf_address} NTP offset was resynchronized but changes haven't been picked up yet."
+        if (ntp_before_status != 'error' && ntp_after_status != 'error') {
+
+            ntp_offset_before = ntp_offset_before['message']
+            ntp_offset_after = ntp_offset_after['message']
+
+            if (ntp_offset_before == ntp_offset_after) {
+                chg_desc = "NOTE: The time offset before/after the resync is still the same because the changes haven't been picked up yet.\n"
+                output['message'] = "${wf_address} NTP offset was resynchronized but changes haven't been picked up yet."
+            }
         }
+        
     } else {
         /* Update ticket/output if validation is successfull */
         success = false
@@ -96,7 +105,10 @@ def ntp_offset() {
             '_address_': wf_address
         ]
     )
-    offset_check_output['response'] = 'error'
+
+    // offset_check_output['response'] = 'error'
+    // offset_check_output['message'] = 'NTP OFFSET CHECK WAS UNSUCCESSFUL TEST.'
+
     if (offset_check_output['response'] == 'ok') {
         chg_desc = "The current time offset is: ${offset_check_output['message']} milliseconds.\n"
         this_base.update_chg_ticket_desc(chg_desc)
