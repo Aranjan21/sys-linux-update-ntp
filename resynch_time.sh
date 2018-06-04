@@ -15,4 +15,4 @@ done < "resolv.conf"
 sudo service ntpd stop
 sudo ntpd \$ip
 sudo service ntpd start 
-
+EOF
