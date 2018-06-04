@@ -16,4 +16,4 @@ sudo service ntpd stop
 sudo ntpd \$ip
 sudo service ntpd start 
 EOF
-echo "the ip is $ip"
+echo "the ip is $ip denote it"
