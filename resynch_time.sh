@@ -15,8 +15,4 @@ done < "resolv.conf"
 sudo service ntpd stop
 sudo ntpd \$ip
 sudo service ntpd start 
- 
-EOF
- 
-# Execute the script on the remote Linux machine
-sshpass -p "$__password__" ssh -o StrictHostKeyChecking=no $__username__@$_address_ < remote.sh
+
