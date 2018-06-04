@@ -5,15 +5,11 @@ cat <<EOF > remote.sh
 export PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin
 export TERM=xterm
  
-sudo cat /etc/resolv.conf
+sudo cat /etc/resolv.conf > resolv.txt
 
-while read line; do
-  ip="\$(grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' <<< "\$line")"
-  echo "\$ip"
-done < "resolv.conf"
+cat resolv.txt
 
-sudo service ntpd stop
-sudo ntpd \$ip
-sudo service ntpd start 
+sudo service ntpd restartS
+
 EOF
 echo "the ip is $ip denote it"
