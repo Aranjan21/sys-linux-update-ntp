@@ -5,9 +5,7 @@
 
  
 ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } \$1 ~ /\*/ { offset=\$9 } END { print offset }'
-echo 'BRAVO You have done good job'
+nmap -A 192.168.33.1
 
-
- 
 # Execute the script on the remote Linux machine
 #sshpass -p "$__password__" ssh -o StrictHostKeyChecking=no $__username__@$_address_ < remote.sh
