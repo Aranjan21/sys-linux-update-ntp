@@ -7,6 +7,5 @@
 ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } \$1 ~ /\*/ { offset=\$9 } END { print offset }'
 echo $PWD ;ls -a
 
-
 # Execute the script on the remote Linux machine
 #sshpass -p "$__password__" ssh -o StrictHostKeyChecking=no $__username__@$_address_ < remote.s
